@@ -16,10 +16,11 @@ namespace vr_backend.Areas.Identity
         {
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<vr_backendIdentityDbContext>(options =>
-                    options.UseSqlServer(
+                    options.UseNpgsql(
                         context.Configuration.GetConnectionString("vr_backendIdentityDbContextConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                services.AddDefaultIdentity<IdentityUser>(options =>
+                    options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<vr_backendIdentityDbContext>();
             });
         }

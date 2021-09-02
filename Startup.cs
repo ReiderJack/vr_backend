@@ -23,7 +23,14 @@ namespace vr_backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddRazorPages()
+            .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizePage("/ Contact");
+                options.Conventions.AuthorizeFolder("/ Private");
+                options.Conventions.AllowAnonymousToPage("/ Private / PublicPage");
+                options.Conventions.AllowAnonymousToFolder("/ Private / PublicPages");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

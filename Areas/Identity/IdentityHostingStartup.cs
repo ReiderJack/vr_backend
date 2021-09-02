@@ -20,7 +20,8 @@ namespace vr_backend.Areas.Identity
                         context.Configuration.GetConnectionString("vr_backendIdentityDbContextConnection")));
 
                 services.AddDefaultIdentity<IdentityUser>(options =>
-                    options.SignIn.RequireConfirmedAccount = true)
+                    options.SignIn.RequireConfirmedAccount = false)
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<vr_backendIdentityDbContext>();
             });
         }

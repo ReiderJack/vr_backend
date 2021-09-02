@@ -21,11 +21,14 @@ namespace vr_backend.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
@@ -34,6 +37,7 @@ namespace vr_backend.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -62,6 +66,20 @@ namespace vr_backend.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
+        public async Task CreateRole()
+        {
+            bool x = await _roleManager.RoleExistsAsync("Admin");
+            if (!x)
+            {
+                // first we create Admin role 
+                var role = new IdentityRole
+                {
+                    Name = "Admin"
+                };
+                await _roleManager.CreateAsync(role);
+            }
+        }
+
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -74,7 +92,9 @@ namespace vr_backend.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                await CreateRole();
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var roleresult = _userManager.AddToRoleAsync(user, "Admin");
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using vr_backend.Areas.Identity.Data;
 
 namespace vr_backend
 {
@@ -42,9 +39,10 @@ namespace vr_backend
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                //app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
@@ -59,6 +57,12 @@ namespace vr_backend
             {
                 endpoints.MapRazorPages();
             });
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<vr_backendIdentityDbContext>();
+                context.Database.Migrate();
+            }
         }
     }
 }

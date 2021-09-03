@@ -10,7 +10,7 @@ using vr_backend.Areas.Identity.Data;
 namespace vr_backend.Migrations
 {
     [DbContext(typeof(vr_backendIdentityDbContext))]
-    [Migration("20210902120747_CreateIdentitySchema")]
+    [Migration("20210903141343_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

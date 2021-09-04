@@ -20,5 +20,17 @@ services:
      depends_on:
       - db
 
+  proxy:
+      build:
+          context:  ./nginx
+          dockerfile: Dockerfile
+      ports:
+          - "80:80"
+          - "443:443"
+      volumes:
+          - /etc/letsencrypt/:/etc/letsencrypt/
+      links:
+          - web
+
 volumes:
   db-data:
